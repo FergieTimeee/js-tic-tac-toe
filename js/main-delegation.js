@@ -2,6 +2,7 @@ import { CELL_VALUE, GAME_STATUS, TURN } from "./constants.js";
 import {
   getCellElementAtIdx,
   getCellElementList,
+  getCellListElement,
   getCurrentTurnElement,
   getGameStatusElement,
   getReplayButtonElement,
@@ -94,11 +95,19 @@ function handleCellClick(cell, index) {
   }
 }
 function initCellElementList() {
-  const cellElementList = getCellElementList();
-
-  cellElementList.forEach((cell, index) => {
-    cell.addEventListener("click", () => handleCellClick(cell, index));
+  const liElementList = getCellElementList();
+  liElementList.forEach((liElement, index) => {
+    liElement.dataset.index = index;
   });
+
+  const ulElement = getCellListElement();
+  if (ulElement) {
+    ulElement.addEventListener("click", (event) => {
+      if (event.target.tagName.toLowerCase() !== "li") return;
+      const index = Number.parseInt(event.target.dataset.index);
+      handleCellClick(event.target, index);
+    });
+  }
 }
 
 function resetGame() {
